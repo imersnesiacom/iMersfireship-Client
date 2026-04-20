@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMersFireship - Digital Product Platform</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1803,6 +1805,7 @@
        
         if(set.appName) {
             document.querySelectorAll('.app-name-display').forEach(el => el.innerText = set.appName);
+            document.title = set.appName + " - Digital Product Platform";
         }
         window.applyLogo(set.logoUrl);
         
