@@ -1639,8 +1639,35 @@
         const userRoleDisplayEl = document.getElementById('userRoleDisplay');
         if (userRoleDisplayEl) userRoleDisplayEl.innerText = user.role;
         
+        // --- TUNING MULTI-LICENSE PREMIUM (BARIS 1642-1644) ---
         const userLicenseCodeEl = document.getElementById('userLicenseCode');
-        if (userLicenseCodeEl) userLicenseCodeEl.innerText = user.license || 'TIDAK-ADA-LISENSI';
+        if (userLicenseCodeEl) {
+            const rawLicense = user.license || '';
+            if (!rawLicense || rawLicense === 'TIDAK-ADA-LISENSI') {
+                userLicenseCodeEl.innerText = 'TIDAK-ADA-LISENSI';
+            } else {
+                const licenseArray = rawLicense.split(',').map(item => item.trim());
+                
+                // Render dengan font Montserrat dan Spacing yang lega
+                userLicenseCodeEl.innerHTML = licenseArray.map(code => `
+                    <div class="flex items-center justify-between bg-white dark:bg-slate-800/40 p-4 rounded-2xl mb-4 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1" style="font-family: 'Montserrat', sans-serif;">License Key</span>
+                            <span class="font-mono text-brand dark:text-brandHover font-bold text-sm sm:text-base tracking-wider">${code}</span>
+                        </div>
+                        <button onclick="navigator.clipboard.writeText('${code}'); alert('Lisensi Disalin!')" 
+                                class="bg-brand hover:bg-brandHover text-white text-[11px] font-bold px-5 py-2.5 rounded-xl transition-all active:scale-95 shadow-sm flex items-center gap-2"
+                                style="font-family: 'Montserrat', sans-serif;">
+                            <i class="ph ph-copy"></i> Salin
+                        </button>
+                    </div>
+                `).join('');
+                
+                // Sembunyikan tombol salin bawaan yang lama
+                const originalCopyBtn = userLicenseCodeEl.nextElementSibling;
+                if (originalCopyBtn && originalCopyBtn.tagName === 'BUTTON') originalCopyBtn.style.display = 'none';
+            }
+        }
         
         if (user.role === 'user') {
             document.querySelectorAll('[data-target="products"], [data-target="orders"], [data-target="coupons"], [data-target="users"], [data-target="broadcast"], [data-target="templates"], [data-target="settings"], [data-target="system-settings"]').forEach(el => el.classList.add('hidden'));
